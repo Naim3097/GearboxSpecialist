@@ -1,0 +1,31 @@
+/**
+ * Global site configuration.
+ * The hub's single source of truth for identity, URLs and locale strategy.
+ */
+export const site = {
+  name: "Gearbox Specialist",
+  legalName: "Gearbox Specialist Malaysia",
+  domain: "gearboxspecialist.com",
+  url: "https://gearboxspecialist.com",
+  tagline: "Malaysia's definitive gearbox authority",
+  description:
+    "Expert guides on CVT and automatic gearbox problems, repair costs and maintenance in Malaysia — and the fastest route to a specialist workshop near you.",
+  locale: "en_MY",
+  phoneDisplay: "+60 3-0000 0000", // placeholder until supplied
+  areaServed: ["Kuala Lumpur", "Selangor", "Klang Valley"],
+  social: {
+    facebook: "https://www.facebook.com/gearboxspecialist",
+    instagram: "https://www.instagram.com/gearboxspecialist",
+  },
+} as const;
+
+/** Locales the hub is architected for. EN ships first; BM and ZH activate in Phase 2. */
+export const locales = ["en", "ms", "zh"] as const;
+export type Locale = (typeof locales)[number];
+export const defaultLocale: Locale = "en";
+/** Only locales listed here are emitted in hreflang alternates / sitemaps. */
+export const activeLocales: Locale[] = ["en"];
+
+export function absoluteUrl(path: string): string {
+  return `${site.url}${path.startsWith("/") ? path : `/${path}`}`;
+}

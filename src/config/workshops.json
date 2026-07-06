@@ -1,0 +1,86 @@
+{
+  "$comment": "Workshop routing layer. Edit this file to change outbound destinations without touching code. landingUrl values are PLACEHOLDERS until the real workshop landing-page URLs are supplied. Matching: '*' matches everything; specificity wins (location > brand > service); ctx.workshopId short-circuits to that workshop directly.",
+  "defaultWorkshopId": "mna-dynamic-torque",
+  "utm": {
+    "source": "gearboxspecialist.com",
+    "medium": "hub"
+  },
+  "workshops": [
+    {
+      "id": "mna-dynamic-torque",
+      "name": "MNA Dynamic Torque",
+      "shortName": "MNA Dynamic Torque",
+      "landingUrl": "https://workshop.example.com/mna-dynamic-torque",
+      "town": "Alam Impian, Shah Alam",
+      "state": "Selangor",
+      "region": "Central",
+      "specialties": ["CVT rebuild", "DSG / DCT", "Continental AT", "Diagnostics"],
+      "locations": [
+        "kuala-lumpur",
+        "petaling-jaya",
+        "shah-alam",
+        "subang-jaya",
+        "klang",
+        "puchong",
+        "cheras",
+        "ampang",
+        "kajang",
+        "seri-kembangan",
+        "putrajaya",
+        "rawang"
+      ],
+      "brands": ["*"],
+      "services": ["*"],
+      "priority": 1
+    },
+    {
+      "id": "im-dynamic-torque",
+      "name": "IM Dynamic Torque",
+      "shortName": "IM Dynamic Torque",
+      "landingUrl": "https://workshop.example.com/im-dynamic-torque",
+      "town": "Simpang Ampat",
+      "state": "Pulau Pinang",
+      "region": "Northern",
+      "specialties": ["CVT rebuild", "Automatic overhaul", "Diagnostics"],
+      "locations": [
+        "pulau-pinang",
+        "simpang-ampat",
+        "seberang-perai",
+        "bukit-mertajam",
+        "butterworth",
+        "georgetown"
+      ],
+      "brands": ["*"],
+      "services": ["*"],
+      "priority": 2
+    },
+    {
+      "id": "overhaulin-yard",
+      "name": "Overhaulin Yard",
+      "shortName": "Overhaulin Yard",
+      "landingUrl": "https://workshop.example.com/overhaulin-yard",
+      "town": "Sungai Petani",
+      "state": "Kedah",
+      "region": "Northern",
+      "specialties": ["Gearbox overhaul", "Torque converter", "4AT / 6AT"],
+      "locations": ["kedah", "sungai-petani", "alor-setar", "kulim", "gurun"],
+      "brands": ["*"],
+      "services": ["*"],
+      "priority": 3
+    },
+    {
+      "id": "d7teen",
+      "name": "D7Teen",
+      "shortName": "D7Teen",
+      "landingUrl": "https://workshop.example.com/d7teen",
+      "town": "Tampoi",
+      "state": "Johor",
+      "region": "Southern",
+      "specialties": ["CVT rebuild", "DCT clutch", "Diagnostics"],
+      "locations": ["johor", "johor-bahru", "tampoi", "skudai", "iskandar-puteri"],
+      "brands": ["*"],
+      "services": ["*"],
+      "priority": 4
+    }
+  ]
+}

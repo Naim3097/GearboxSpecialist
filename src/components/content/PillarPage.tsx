@@ -21,7 +21,7 @@ export function PillarPage({ pillar }: { pillar: PillarSlug }) {
       <header className="border-b border-line bg-panel">
         <div className="mx-auto max-w-7xl px-4 pb-14 pt-12 sm:px-6 sm:pt-16">
           <Breadcrumbs items={[{ name: "Home", path: "/" }, { name: info.name, path: `/${pillar}` }]} />
-          <h1 className="font-display mt-8 max-w-4xl text-4xl leading-[0.95] text-fog sm:text-6xl">
+          <h1 className="font-display mt-8 max-w-4xl text-3xl leading-[0.95] text-fog sm:text-6xl">
             {info.name}
             <span className="text-red">.</span>
           </h1>

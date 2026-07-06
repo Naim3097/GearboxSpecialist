@@ -86,7 +86,7 @@ export default function HomePage() {
               <p className="font-tech text-[12px] font-medium uppercase tracking-[0.26em] text-red-hot">
                 KL / Selangor / Klang Valley
               </p>
-              <h1 className="font-display mt-4 text-[13vw] leading-[0.92] text-fog sm:text-6xl lg:text-7xl">
+              <h1 className="font-display mt-4 text-[clamp(2rem,9vw,3.5rem)] leading-[0.92] text-fog sm:text-6xl lg:text-7xl">
                 Malaysia&apos;s
                 <br />
                 gearbox

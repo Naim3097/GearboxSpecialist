@@ -61,7 +61,7 @@ export default async function LocationPage({ params }: { params: Promise<{ locat
           <p className="mt-8 font-tech text-[11px] font-medium uppercase tracking-[0.24em] text-red-hot">
             {loc.state}
           </p>
-          <h1 className="font-display mt-3 max-w-4xl text-4xl leading-[0.95] text-fog sm:text-6xl">
+          <h1 className="font-display mt-3 max-w-4xl text-3xl leading-[0.95] text-fog sm:text-6xl">
             {loc.name}
             <span className="text-red">.</span>
           </h1>

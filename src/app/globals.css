@@ -31,6 +31,8 @@ body {
   color: var(--color-fog);
   font-family: var(--font-sans);
   text-rendering: optimizeLegibility;
+  /* Display type is deliberately huge — never let an overrun become page scroll. */
+  overflow-x: clip;
 }
 
 ::selection {

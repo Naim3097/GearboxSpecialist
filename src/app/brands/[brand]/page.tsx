@@ -55,7 +55,7 @@ export default async function BrandPage({ params }: { params: Promise<{ brand: s
               { name: brand.name, path: `/brands/${slug}` },
             ]}
           />
-          <h1 className="font-display mt-8 max-w-4xl text-4xl leading-[0.95] text-fog sm:text-6xl">
+          <h1 className="font-display mt-8 max-w-4xl text-3xl leading-[0.95] text-fog sm:text-6xl">
             {brand.name}
             <span className="text-red">.</span>
           </h1>

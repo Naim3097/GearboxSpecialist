@@ -19,6 +19,14 @@ export interface Workshop {
   state: string;
   region: string;
   specialties: string[];
+  /** Optional photo path under /public (e.g. "/workshops/mna.jpg"). Cards show a styled placeholder until set. */
+  image?: string;
+  /** Google Business Profile share link — surfaces as "Google Reviews" on cards. */
+  gbpUrl?: string;
+  /** Location slug stored when the visitor picks this workshop's region. */
+  pickerValue?: string;
+  /** Region-selector label per locale (en/ms/zh). */
+  pickerLabel?: Record<string, string>;
   locations: string[];
   brands: string[];
   services: string[];
@@ -38,10 +46,16 @@ export interface RoutingContext {
   sourcePath?: string;
   /** CTA placement identifier, e.g. "sticky", "inline", "hero" */
   placement?: string;
+  /** Page locale — sets the language of the WhatsApp pre-fill. */
+  locale?: "en" | "ms" | "zh";
 }
 
 interface WorkshopsConfig {
   defaultWorkshopId: string;
+  contact?: {
+    mode: "landing" | "whatsapp";
+    whatsappNumber: string;
+  };
   utm: { source: string; medium: string };
   workshops: Workshop[];
 }
@@ -98,11 +112,60 @@ export function resolveWorkshop(ctx: RoutingContext = {}): Workshop {
   );
 }
 
+/** Slugs → human words ("cvt-repair" → "CVT Repair"). */
+const ACRONYMS = new Set(["cvt", "dct", "dsg", "at", "bmw", "vw", "kl"]);
+export function slugTitle(slug: string): string {
+  return slug
+    .split("-")
+    .map((w) => (ACRONYMS.has(w) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(" ");
+}
+
+/** Pre-filled WhatsApp message in the page's language, built from context. */
+function buildWhatsappMessage(workshop: Workshop, ctx: RoutingContext): string {
+  const templates = {
+    en: {
+      greeting: `Hi Gearbox Specialist! I'd like to book a gearbox diagnosis at ${workshop.name} (${workshop.town}).`,
+      service: "Service",
+      car: "Car",
+      area: "My area",
+    },
+    ms: {
+      greeting: `Hi Gearbox Specialist! Saya nak book diagnosis gearbox di ${workshop.name} (${workshop.town}).`,
+      service: "Servis",
+      car: "Kereta",
+      area: "Kawasan saya",
+    },
+    zh: {
+      greeting: `你好！我想在 ${workshop.name}（${workshop.town}）预约波箱检测。`,
+      service: "服务",
+      car: "车型",
+      area: "我的地区",
+    },
+  };
+  const t = templates[ctx.locale ?? "en"];
+
+  const lines = [t.greeting];
+  if (ctx.service) lines.push(`${t.service}: ${slugTitle(ctx.service)}`);
+  if (ctx.brand) lines.push(`${t.car}: ${slugTitle(ctx.brand)}`);
+  if (ctx.location) lines.push(`${t.area}: ${slugTitle(ctx.location)}`);
+  if (ctx.sourcePath && ctx.sourcePath !== "/") lines.push(`Ref: ${ctx.sourcePath}`);
+  return lines.join("\n");
+}
+
 /**
  * Builds the outbound handoff URL. Passes service/vehicle/location context so
- * the landing page can feel continuous — strictly no personal data.
+ * the handoff feels continuous — strictly no personal data.
+ *
+ * While contact.mode is "whatsapp" (landing pages not live yet), every CTA
+ * resolves to a wa.me link with a pre-filled, context-aware message instead.
  */
 export function buildHandoffUrl(workshop: Workshop, ctx: RoutingContext = {}): string {
+  if (config.contact?.mode === "whatsapp") {
+    const text = buildWhatsappMessage(workshop, ctx);
+    return `https://wa.me/${config.contact.whatsappNumber}?text=${encodeURIComponent(text)}`;
+  }
+
   const url = new URL(workshop.landingUrl);
   url.searchParams.set("utm_source", config.utm.source);
   url.searchParams.set("utm_medium", config.utm.medium);

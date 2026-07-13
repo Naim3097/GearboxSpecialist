@@ -1,11 +1,32 @@
 import type { Metadata } from "next";
-import { site, absoluteUrl, activeLocales, defaultLocale } from "@/config/site";
+import { site, absoluteUrl, type Locale } from "@/config/site";
+import { msTranslatedPaths, zhTranslatedPaths } from "@/lib/i18n";
+
+const hreflangCodes: Record<Locale, string> = {
+  en: "en-MY",
+  ms: "ms-MY",
+  zh: "zh-Hans",
+};
 
 /**
- * Metadata helper. Guarantees every page ships canonical, OG and
- * hreflang-ready alternates. When BM/ZH activate (Phase 2), adding them to
- * activeLocales emits the extra hreflang entries site-wide with no per-page
- * changes.
+ * Derive the hreflang set for a canonical EN path from the translated-path
+ * registry. Returns locale → URL path for every language the page exists in.
+ */
+export function translationsFor(enPath: string): Partial<Record<Locale, string>> {
+  const map: Partial<Record<Locale, string>> = { en: enPath };
+  if (msTranslatedPaths.has(enPath)) {
+    map.ms = enPath === "/" ? "/ms" : `/ms${enPath}`;
+  }
+  if (zhTranslatedPaths.has(enPath)) {
+    map.zh = enPath === "/" ? "/zh" : `/zh${enPath}`;
+  }
+  return map;
+}
+
+/**
+ * Metadata helper. Guarantees every page ships canonical, OG and hreflang
+ * alternates. `path` is the page's own URL; `translations` maps every locale
+ * the page exists in to its path (defaults to EN-only).
  */
 export function pageMetadata(opts: {
   title: string;
@@ -13,15 +34,16 @@ export function pageMetadata(opts: {
   path: string;
   ogType?: "website" | "article";
   image?: string;
+  translations?: Partial<Record<Locale, string>>;
 }): Metadata {
   const url = absoluteUrl(opts.path);
+  const translations = opts.translations ?? { en: opts.path };
 
   const languages: Record<string, string> = {};
-  for (const locale of activeLocales) {
-    languages[locale === "en" ? "en-MY" : locale === "ms" ? "ms-MY" : "zh-Hans"] =
-      locale === defaultLocale ? url : absoluteUrl(`/${locale}${opts.path}`);
+  for (const [locale, p] of Object.entries(translations)) {
+    languages[hreflangCodes[locale as Locale]] = absoluteUrl(p);
   }
-  languages["x-default"] = url;
+  languages["x-default"] = absoluteUrl(translations.en ?? opts.path);
 
   return {
     title: opts.title,

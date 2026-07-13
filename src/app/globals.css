@@ -198,7 +198,11 @@ body {
 }
 
 .prose table {
+  /* block + overflow keeps wide price tables scrollable on phones instead of breaking the page */
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   font-size: 0.95rem;
   line-height: 1.6;

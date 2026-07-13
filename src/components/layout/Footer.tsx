@@ -1,11 +1,20 @@
 import Link from "next/link";
+import type { Locale } from "@/config/site";
 import { site } from "@/config/site";
-import { pillars } from "@/lib/content";
+import { getDict, localeHref } from "@/lib/i18n";
+import { pillars, getPillar } from "@/lib/content";
 import { locations } from "@/data/locations";
 import { brands } from "@/data/brands";
+import { getWorkshops } from "@/lib/routing";
 import { WorkshopLink } from "@/components/routing/WorkshopLink";
 
-export function Footer() {
+export function Footer({ locale = "en" }: { locale?: Locale }) {
+  const t = getDict(locale);
+  const [finalLine1, finalLine2] = t.footerFinalHeading.split("\n");
+
+  // Guide links stay in-locale where the page exists; otherwise EN.
+  const pillarHref = (slug: string) => localeHref(locale, `/${slug}`);
+
   return (
     <footer className="border-t-2 border-red bg-panel">
       {/* Final routing block — the footer is a route, not a dead end. */}
@@ -13,19 +22,19 @@ export function Footer() {
         <div className="stripes clip-card flex flex-col gap-8 bg-panel-2 p-8 sm:p-12 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="font-tech text-[11px] font-medium uppercase tracking-[0.24em] text-red-hot">
-              Final call
+              {t.footerFinalKicker}
             </p>
             <h2 className="font-display mt-4 max-w-xl text-3xl text-fog sm:text-5xl">
-              Stop guessing.
+              {finalLine1}
               <br />
-              Get it diagnosed.
+              {finalLine2}
             </h2>
           </div>
           <WorkshopLink
             placement="footer"
             className="clip-btn inline-flex items-center justify-center bg-red px-10 py-5 font-tech text-[14px] font-semibold uppercase tracking-[0.14em] text-white transition-colors hover:bg-red-hot"
           >
-            Book a diagnosis
+            {t.bookDiagnosis}
           </WorkshopLink>
         </div>
 
@@ -35,31 +44,31 @@ export function Footer() {
               Gearbox<span className="text-red">/</span>Specialist
             </p>
             <p className="mt-4 max-w-xs text-[13px] leading-relaxed text-muted">
-              {site.description}
+              {t.footerTagline}
             </p>
           </div>
 
-          <nav aria-label="Guides">
+          <nav aria-label={t.footerGuides}>
             <p className="font-tech text-[11px] font-medium uppercase tracking-[0.24em] text-muted">
-              Guides
+              {t.footerGuides}
             </p>
             <ul className="mt-4 space-y-2.5">
               {pillars.map((p) => (
                 <li key={p.slug}>
                   <Link
-                    href={`/${p.slug}`}
+                    href={pillarHref(p.slug)}
                     className="font-tech text-[13px] uppercase tracking-[0.08em] text-fog/80 transition-colors hover:text-red-hot"
                   >
-                    {p.name}
+                    {getPillar(p.slug, locale)?.name ?? p.name}
                   </Link>
                 </li>
               ))}
               <li>
                 <Link
-                  href="/workshops"
+                  href={localeHref(locale, "/workshops")}
                   className="font-tech text-[13px] uppercase tracking-[0.08em] text-fog/80 transition-colors hover:text-red-hot"
                 >
-                  Workshops
+                  {t.footerWorkshops}
                 </Link>
               </li>
               <li>
@@ -67,15 +76,15 @@ export function Footer() {
                   href="/about"
                   className="font-tech text-[13px] uppercase tracking-[0.08em] text-fog/80 transition-colors hover:text-red-hot"
                 >
-                  About
+                  {t.footerAbout}
                 </Link>
               </li>
             </ul>
           </nav>
 
-          <nav aria-label="Popular brands">
+          <nav aria-label={t.footerByBrand}>
             <p className="font-tech text-[11px] font-medium uppercase tracking-[0.24em] text-muted">
-              By brand
+              {t.footerByBrand}
             </p>
             <ul className="mt-4 space-y-2.5">
               {brands.slice(0, 6).map((b) => (
@@ -93,15 +102,15 @@ export function Footer() {
                   href="/brands"
                   className="font-tech text-[13px] uppercase tracking-[0.08em] text-muted transition-colors hover:text-red-hot"
                 >
-                  All brands
+                  {t.footerAllBrands}
                 </Link>
               </li>
             </ul>
           </nav>
 
-          <nav aria-label="Areas served">
+          <nav aria-label={t.footerAreas}>
             <p className="font-tech text-[11px] font-medium uppercase tracking-[0.24em] text-muted">
-              Areas
+              {t.footerAreas}
             </p>
             <ul className="mt-4 space-y-2.5">
               {locations.slice(0, 6).map((l) => (
@@ -114,24 +123,48 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              {/* Regions without area landing pages route to the workshop directory. */}
+              {getWorkshops()
+                .filter(
+                  (w) =>
+                    w.pickerLabel &&
+                    !w.locations.some((slug) => locations.some((l) => l.slug === slug))
+                )
+                .map((w) => (
+                  <li key={w.id}>
+                    <Link
+                      href={localeHref(locale, "/workshops")}
+                      className="font-tech text-[13px] uppercase tracking-[0.08em] text-fog/80 transition-colors hover:text-red-hot"
+                    >
+                      {w.pickerLabel?.[locale] ?? w.pickerLabel?.en}
+                    </Link>
+                  </li>
+                ))}
               <li>
                 <Link
                   href="/locations"
                   className="font-tech text-[13px] uppercase tracking-[0.08em] text-muted transition-colors hover:text-red-hot"
                 >
-                  All areas
+                  {t.footerAllAreas}
                 </Link>
               </li>
             </ul>
           </nav>
         </div>
 
-        <div className="mt-14 flex items-center gap-3 border-t border-line pt-8">
+        <div className="mt-14 flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-line pt-8">
           <span className="h-[2px] w-8 bg-red" aria-hidden />
           <p className="font-tech text-[11px] uppercase tracking-[0.12em] text-muted">
-            © {new Date().getFullYear()} {site.legalName} — Independent gearbox knowledge for
-            Malaysian drivers
+            © {new Date().getFullYear()} {site.legalName} — {t.footerLegal}
           </p>
+          <a
+            href={site.social.facebook}
+            target="_blank"
+            rel="noopener"
+            className="ml-auto font-tech text-[11px] font-medium uppercase tracking-[0.14em] text-muted underline decoration-red/50 underline-offset-4 transition-colors hover:text-red-hot"
+          >
+            <span className="text-red">{"//"}</span> Facebook
+          </a>
         </div>
       </div>
     </footer>

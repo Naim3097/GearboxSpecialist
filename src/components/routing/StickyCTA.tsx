@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { WorkshopLink } from "@/components/routing/WorkshopLink";
+import { getDict } from "@/lib/i18n";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import type { RoutingContext } from "@/lib/routing";
 
 /**
@@ -16,6 +18,8 @@ export function StickyCTA({
   label?: string;
 }) {
   const [visible, setVisible] = useState(false);
+  const locale = useLocale();
+  const t = getDict(locale);
 
   useEffect(() => {
     const onScroll = () => {
@@ -36,14 +40,14 @@ export function StickyCTA({
     >
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 border-t-2 border-red bg-carbon/95 px-5 py-4 backdrop-blur-md sm:mb-6 sm:border-x sm:border-x-line">
         <p className="hidden font-tech text-[12px] uppercase tracking-[0.1em] text-muted sm:block">
-          {label ?? "Unsure what your gearbox is telling you?"}
+          {label ?? t.stickyDefault}
         </p>
         <WorkshopLink
           context={context}
           placement="sticky"
           className="clip-btn w-full whitespace-nowrap bg-red px-7 py-3 text-center font-tech text-[13px] font-semibold uppercase tracking-[0.12em] text-white transition-colors hover:bg-red-hot sm:w-auto"
         >
-          Book a diagnosis
+          {t.bookDiagnosis}
         </WorkshopLink>
       </div>
     </div>

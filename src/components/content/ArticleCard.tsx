@@ -1,9 +1,20 @@
 import Link from "next/link";
+import type { Locale } from "@/config/site";
+import { getDict } from "@/lib/i18n";
 import type { Article } from "@/lib/content";
 import { getPillar } from "@/lib/content";
 
-export function ArticleCard({ article, hero = false }: { article: Article; hero?: boolean }) {
-  const pillar = getPillar(article.pillar);
+export function ArticleCard({
+  article,
+  hero = false,
+  locale = "en",
+}: {
+  article: Article;
+  hero?: boolean;
+  locale?: Locale;
+}) {
+  const pillar = getPillar(article.pillar, locale);
+  const t = getDict(locale);
   return (
     <article
       className={`clip-card group relative flex h-full flex-col overflow-hidden border border-line bg-panel transition-colors duration-300 hover:border-line-hi ${
@@ -27,7 +38,7 @@ export function ArticleCard({ article, hero = false }: { article: Article; hero?
         <p className="mt-4 max-w-xl text-[14px] leading-relaxed text-muted">{article.description}</p>
       )}
       <p className="mt-auto pt-5 font-tech text-[11px] uppercase tracking-[0.16em] text-muted">
-        {article.readingMinutes} min
+        {article.readingMinutes} {t.min}
       </p>
       <span
         aria-hidden

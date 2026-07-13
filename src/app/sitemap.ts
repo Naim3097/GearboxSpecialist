@@ -9,20 +9,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: absoluteUrl("/"), lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: absoluteUrl("/ms"), lastModified: now, changeFrequency: "weekly", priority: 1 },
+    { url: absoluteUrl("/zh"), lastModified: now, changeFrequency: "weekly", priority: 1 },
     { url: absoluteUrl("/about"), lastModified: now, changeFrequency: "monthly", priority: 0.5 },
     { url: absoluteUrl("/workshops"), lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: absoluteUrl("/ms/workshops"), lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: absoluteUrl("/zh/workshops"), lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: absoluteUrl("/brands"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: absoluteUrl("/locations"), lastModified: now, changeFrequency: "weekly", priority: 0.8 },
   ];
 
-  const pillarPages: MetadataRoute.Sitemap = pillars.map((p) => ({
-    url: absoluteUrl(`/${p.slug}`),
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: 0.9,
-  }));
+  const pillarPages: MetadataRoute.Sitemap = pillars.flatMap((p) =>
+    ["", "/ms", "/zh"].map((prefix) => ({
+      url: absoluteUrl(`${prefix}/${p.slug}`),
+      lastModified: now,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    }))
+  );
 
-  const articlePages: MetadataRoute.Sitemap = getArticles().map((a) => ({
+  const articlePages: MetadataRoute.Sitemap = [
+    ...getArticles(),
+    ...getArticles(undefined, "ms"),
+    ...getArticles(undefined, "zh"),
+  ].map((a) => ({
     url: absoluteUrl(a.path),
     lastModified: new Date(a.updated ?? a.date),
     changeFrequency: "monthly",

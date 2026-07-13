@@ -12,10 +12,10 @@ export const site = {
     "Expert guides on CVT and automatic gearbox problems, repair costs and maintenance in Malaysia — and the fastest route to a specialist workshop near you.",
   locale: "en_MY",
   phoneDisplay: "+60 3-0000 0000", // placeholder until supplied
-  areaServed: ["Kuala Lumpur", "Selangor", "Klang Valley"],
+  areaServed: ["Kuala Lumpur", "Selangor", "Klang Valley", "Pulau Pinang"],
   social: {
-    facebook: "https://www.facebook.com/gearboxspecialist",
-    instagram: "https://www.instagram.com/gearboxspecialist",
+    /** Shared page for both workshops — soon rebranding to Dynamic Torque Ventures. */
+    facebook: "https://www.facebook.com/share/18cpCsJAQT/?mibextid=wwXIfr",
   },
 } as const;
 

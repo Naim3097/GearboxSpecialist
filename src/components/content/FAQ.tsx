@@ -1,9 +1,20 @@
+import type { Locale } from "@/config/site";
+import { getDict } from "@/lib/i18n";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { faqLd } from "@/lib/jsonld";
 
 /** FAQ section with FAQPage structured data — data-sheet styling. */
-export function FAQ({ faqs, heading = "Common questions" }: { faqs: { q: string; a: string }[]; heading?: string }) {
+export function FAQ({
+  faqs,
+  heading,
+  locale = "en",
+}: {
+  faqs: { q: string; a: string }[];
+  heading?: string;
+  locale?: Locale;
+}) {
   if (!faqs.length) return null;
+  heading = heading ?? getDict(locale).faqDefault;
   return (
     <section className="not-prose mt-16">
       <JsonLd data={faqLd(faqs)} />

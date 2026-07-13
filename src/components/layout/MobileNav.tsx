@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { navItems } from "@/components/layout/Header";
+import type { Locale } from "@/config/site";
+import { getDict } from "@/lib/i18n";
 import { WorkshopLink } from "@/components/routing/WorkshopLink";
 
-export function MobileNav() {
+export function MobileNav({ locale = "en" }: { locale?: Locale }) {
   const [open, setOpen] = useState(false);
+  const t = getDict(locale);
 
   return (
     <div className="lg:hidden">
@@ -29,7 +31,7 @@ export function MobileNav() {
         <div className="absolute inset-x-0 top-[67px] border-b border-line bg-carbon">
           <nav className="mx-auto max-w-7xl px-4 py-6 sm:px-6" aria-label="Mobile">
             <ul>
-              {navItems.map((item, i) => (
+              {t.nav.map((item, i) => (
                 <li key={item.href} className="border-b border-line last:border-0">
                   <Link
                     href={item.href}
@@ -51,7 +53,7 @@ export function MobileNav() {
                 placement="mobile-nav"
                 className="clip-btn block bg-red px-6 py-4 text-center font-tech text-[14px] font-semibold uppercase tracking-[0.14em] text-white"
               >
-                Book a diagnosis
+                {t.bookDiagnosis}
               </WorkshopLink>
             </div>
           </nav>

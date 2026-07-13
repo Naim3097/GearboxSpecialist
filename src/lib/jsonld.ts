@@ -103,7 +103,9 @@ export function workshopLd(opts: {
   state: string;
   path: string;
   specialties: string[];
+  gbpUrl?: string;
 }): JsonLd {
+  const sameAs = [opts.gbpUrl, site.social.facebook].filter(Boolean);
   return {
     "@context": "https://schema.org",
     "@type": "AutoRepair",
@@ -116,6 +118,7 @@ export function workshopLd(opts: {
       addressCountry: "MY",
     },
     knowsAbout: opts.specialties,
+    ...(sameAs.length ? { sameAs } : {}),
     parentOrganization: { "@id": `${site.url}/#organization` },
   };
 }

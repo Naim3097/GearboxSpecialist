@@ -3,8 +3,6 @@ import { Archivo_Black, Chakra_Petch, Inter } from "next/font/google";
 import { site } from "@/config/site";
 import { organizationLd, websiteLd } from "@/lib/jsonld";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
 import "./globals.css";
 
 const archivoBlack = Archivo_Black({
@@ -35,6 +33,12 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
 };
 
+/**
+ * Root layout: document shell only. The site chrome (Header/Footer/FAB) lives
+ * in the locale group layouts — (en), ms, zh — so every page renders chrome
+ * in its own language. The html lang attribute stays "en" as the site
+ * default; per-page hreflang alternates carry the locale signal for search.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -47,9 +51,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <JsonLd data={[organizationLd(), websiteLd()]} />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

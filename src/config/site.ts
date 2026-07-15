@@ -5,8 +5,8 @@
 export const site = {
   name: "Gearbox Specialist",
   legalName: "Gearbox Specialist Malaysia",
-  domain: "gearboxspecialist.com",
-  url: "https://gearboxspecialist.com",
+  domain: "cvtspecialist.com",
+  url: "https://cvtspecialist.com",
   tagline: "Malaysia's definitive gearbox authority",
   description:
     "Expert guides on CVT and automatic gearbox problems, repair costs and maintenance in Malaysia — and the fastest route to a specialist workshop near you.",

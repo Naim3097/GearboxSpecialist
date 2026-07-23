@@ -21,7 +21,8 @@ export interface WorkshopClickEvent {
 
 declare global {
   interface Window {
-    dataLayer?: Record<string, unknown>[];
+    dataLayer?: unknown[];
+    gtag?: (...args: unknown[]) => void;
   }
 }
 
@@ -31,6 +32,17 @@ export function trackWorkshopClick(event: WorkshopClickEvent): void {
     window.dataLayer.push({
       event: "workshop_click",
       ...event,
+    });
+
+    // GA4 (gtag.js) — the primary conversion event, with routing context.
+    window.gtag?.("event", "workshop_click", {
+      workshop_id: event.workshopId,
+      placement: event.placement,
+      service: event.service,
+      brand: event.brand,
+      area: event.location,
+      locale: event.locale,
+      source_path: event.sourcePath,
     });
 
     const payload = JSON.stringify({

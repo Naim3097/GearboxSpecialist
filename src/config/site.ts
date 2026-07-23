@@ -11,6 +11,8 @@ export const site = {
   description:
     "Expert guides on CVT and automatic gearbox problems, repair costs and maintenance in Malaysia — and the fastest route to a specialist workshop near you.",
   locale: "en_MY",
+  /** GA4 measurement ID — the Google tag renders once in the root layout. */
+  gaId: "G-WW1FQWNPQX",
   phoneDisplay: "+60 3-0000 0000", // placeholder until supplied
   areaServed: ["Kuala Lumpur", "Selangor", "Klang Valley", "Pulau Pinang"],
   social: {

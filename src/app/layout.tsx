@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Archivo_Black, Chakra_Petch, Inter } from "next/font/google";
 import { site } from "@/config/site";
 import { organizationLd, websiteLd } from "@/lib/jsonld";
@@ -50,6 +51,17 @@ export default function RootLayout({
       className={`${archivoBlack.variable} ${chakraPetch.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        {/* Google tag (gtag.js) — rendered once here, inherited by every page. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${site.gaId}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${site.gaId}');`}
+        </Script>
         <JsonLd data={[organizationLd(), websiteLd()]} />
         {children}
       </body>
